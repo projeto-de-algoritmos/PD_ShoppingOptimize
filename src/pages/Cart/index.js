@@ -6,7 +6,7 @@ import {
   MdDelete,
 } from 'react-icons/md';
 
-import { useProducts } from '../../hooks';
+import { useGlobals } from '../../hooks';
 
 import { formatPrice } from '../../util/format';
 
@@ -14,7 +14,15 @@ import { Container, ProductTable, Total } from './styles';
 
 const  Cart = () => {
   const [total, setTotal] = useState(0);
-  const { addToCart, removeQntFromCart, removeItemFromCart ,cart } = useProducts();
+  const [wallet, setWallet] = useState(0);
+  const {
+    cart,
+    addToCart,
+    removeQntFromCart,
+    removeItemFromCart,
+    incrementPriority,
+    decrementPriority
+  } = useGlobals();
 
   useEffect(() => {
     let newTotal = 0
@@ -35,7 +43,7 @@ const  Cart = () => {
         </thread>
         <tbody>
           {cart.map(product => (
-            <tr id={product.id}>
+            <tr key={product.id}>
               <td>
                 <img src={product.image} alt={product.title} />
               </td>
@@ -44,14 +52,31 @@ const  Cart = () => {
                 <span>{formatPrice(product.price)}</span>
               </td>
               <td>
-                <div>
-                  <button type="button" onClick={() => removeQntFromCart(product.id)}>
-                    <MdRemoveCircleOutline size={20} color="#436461" />
-                  </button>
-                  <input type="number" readOnly value={product.amount} />
-                  <button type="button" onClick={() => addToCart(product.id)}>
-                    <MdAddCircleOutline size={20} color="#436461" />
-                  </button>
+              <div style={{ diplay: 'flex', flexDirection: 'column', marginBottom: '22px'}}>
+                  <h1 style={{ fontSize: '1rem', marginBottom: '4px'}}>Prioridade</h1>
+                  <div>
+                    <button type="button" onClick={() => decrementPriority(product.id)}>
+                      <MdRemoveCircleOutline size={20} color="#436461" />
+                    </button>
+                    <input type="number" readOnly value={product.priority} />
+                    <button type="button" onClick={() => incrementPriority(product.id)}>
+                      <MdAddCircleOutline size={20} color="#436461" />
+                    </button>
+                  </div>
+                </div>
+              </td>
+              <td>
+              <div style={{ diplay: 'flex', flexDirection: 'column', marginBottom: '22px'}}>
+                  <h1 style={{ fontSize: '1rem', marginBottom: '4px'}}>Quantidade</h1>
+                  <div>
+                    <button type="button" onClick={() => removeQntFromCart(product.id)}>
+                      <MdRemoveCircleOutline size={20} color="#436461" />
+                    </button>
+                    <input type="number" readOnly value={product.amount} />
+                    <button type="button" onClick={() => addToCart(product.id)}>
+                      <MdAddCircleOutline size={20} color="#436461" />
+                    </button>
+                  </div>
                 </div>
               </td>
               <td>
@@ -70,6 +95,14 @@ const  Cart = () => {
         </tbody>
       </ProductTable>
       <footer>
+        <div>
+          <h1 style={{ fontSize: '1rem'}}>Valor na carteira em R$</h1>
+          <input
+            type="number"
+            style={{ height: '35px'}}
+            onChange={(e) => setWallet(e.target.value)}
+            />
+        </div>
         <button type="button"> Otimizar pedido</button>
         <Total>
           <span> TOTAL</span>

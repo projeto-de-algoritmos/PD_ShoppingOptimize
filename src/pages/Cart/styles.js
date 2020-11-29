@@ -10,7 +10,7 @@ export const Container = styled.div`
     margin-top: 30px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
   }
 
   button {

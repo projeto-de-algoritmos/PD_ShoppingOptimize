@@ -2,12 +2,12 @@ import React from 'react';
 import { MdAddShoppingCart } from 'react-icons/md';
 import { formatPrice } from '../../util/format';
 
-import { useProducts } from '../../hooks'
+import { useGlobals } from '../../hooks'
 
 import { ProductList } from './styles';
 
 const Home = () => {
-  const { products, addToCart, cart } = useProducts();
+  const { products, addToCart, cart } = useGlobals();
 
   const getAmount = (id) => {
     const item = cart.find((product) => product.id === id);

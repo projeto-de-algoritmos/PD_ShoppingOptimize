@@ -5,9 +5,9 @@ import React, {
 } from 'react';
 
 
-const ProductsContext = createContext({});
+const GlobalsContext = createContext({});
 
-const ProductsProvider= ({ children }) => {
+const GlobalsProvider= ({ children }) => {
   const [cart, setCart] = useState([]);
   const [products] = useState([
     {
@@ -60,7 +60,7 @@ const ProductsProvider= ({ children }) => {
     const product = products.find((item) => item.id === id);
 
     if (!newItem) {
-     return setCart(state => [...state, { ...product, amount: 1}]);
+     return setCart(state => [...state, { ...product, amount: 1, priority: 1}]);
     };
 
     if (newItem.amount + 1 > product.amount) {
@@ -90,23 +90,51 @@ const ProductsProvider= ({ children }) => {
     return setCart((state) => state.filter((product) => product.id !== id));
   }
 
+  const incrementPriority = (id) => {
+    const cartItem = cart.find((item) => item.id === id);
+
+    if (cartItem.priority === 10) return
+
+    return setCart(state => {
+      return state.map((item) => item.id === id ? {...item, priority: item.priority + 1} : item );
+    });
+  }
+
+  const decrementPriority = (id) => {
+    const cartItem = cart.find((item) => item.id === id);
+
+    if (cartItem.priority === 1) return
+
+    return setCart(state => {
+      return state.map((item) => item.id === id ? {...item, priority: item.priority - 1} : item );
+    });
+  }
+
   return (
-    <ProductsContext.Provider
-      value={{ products, addToCart, removeQntFromCart, removeItemFromCart ,cart }}
+    <GlobalsContext.Provider
+      value={{
+        cart,
+        products,
+        addToCart,
+        removeQntFromCart,
+        removeItemFromCart,
+        incrementPriority,
+        decrementPriority
+      }}
     >
       {children}
-    </ProductsContext.Provider>
+    </GlobalsContext.Provider>
   );
 };
 
-function useProducts() {
-  const context = useContext(ProductsContext);
+function useGlobals() {
+  const context = useContext(GlobalsContext);
 
   if (!context) {
-    throw new Error('useProducts must be used within a ProductsProvider');
+    throw new Error('useGlobals must be used within a GlobalsProvider');
   }
 
   return context;
 }
 
-export { ProductsProvider, useProducts };
+export { GlobalsProvider, useGlobals };

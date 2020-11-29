@@ -3,17 +3,17 @@ import { BrowserRouter } from 'react-router-dom';
 
 import GlobalStyle from './styles/global';
 
-import { ProductsProvider } from './hooks';
+import { GlobalsProvider } from './hooks';
 
 import Header from './components/Header';
 import Routes from './routes';
 
 const App = () => (
   <BrowserRouter>
-    <ProductsProvider>
+    <GlobalsProvider>
       <Header />
       <Routes />
-    </ProductsProvider>
+    </GlobalsProvider>
 
     <GlobalStyle />
   </BrowserRouter>

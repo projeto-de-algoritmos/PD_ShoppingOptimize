@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 
 import { MdShoppingBasket } from 'react-icons/md';
 
-import { useProducts } from '../../hooks'
+import { useGlobals } from '../../hooks'
 
 import { Container, Cart } from './styles';
 
 const Header = () => {
-  const { cart } = useProducts();
+  const { cart } = useGlobals();
 
   return (
     <Container>
