@@ -57,11 +57,11 @@ const ProductsProvider= ({ children }) => {
   const addToCart = (id) => {
     const newItem = cart.find((item) => item.id === id);
 
-    if (!newItem) {
-     return setCart(state => [...state, { id: id, amount: 1}]);
-    };
-
     const product = products.find((item) => item.id === id);
+
+    if (!newItem) {
+     return setCart(state => [...state, { ...product, amount: 1}]);
+    };
 
     if (newItem.amount + 1 > product.amount) {
       return console.log('produto fora de estoque');
@@ -72,9 +72,27 @@ const ProductsProvider= ({ children }) => {
     });
   }
 
+  const removeQntFromCart = (id) => {
+    const newItem = cart.find((item) => item.id === id);
+
+    if (!newItem) return;
+
+    if (newItem.amount === 1) {
+      return setCart(state => state.filter((item) => item.id !== id));
+    }
+
+    return setCart(state => {
+      return state.map((item) => item.id === id ? {...item, amount: item.amount - 1} : item );
+    });
+  }
+
+  const removeItemFromCart = (id) => {
+    return setCart((state) => state.filter((product) => product.id !== id));
+  }
+
   return (
     <ProductsContext.Provider
-      value={{ products, addToCart, cart }}
+      value={{ products, addToCart, removeQntFromCart, removeItemFromCart ,cart }}
     >
       {children}
     </ProductsContext.Provider>

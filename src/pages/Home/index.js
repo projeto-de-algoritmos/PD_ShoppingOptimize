@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { MdAddShoppingCart } from 'react-icons/md';
 import { formatPrice } from '../../util/format';
 
@@ -21,7 +21,6 @@ const Home = () => {
 
   return (
     <ProductList>
-      {console.log(cart)}
         {products.map(product => (
           <li key={product.id}>
             <img src={product.image} alt={product.title} />
