@@ -4,6 +4,7 @@ import React, {
   useState,
 } from 'react';
 
+import { toast } from 'react-toastify';
 
 const GlobalsContext = createContext({});
 
@@ -64,7 +65,7 @@ const GlobalsProvider= ({ children }) => {
     };
 
     if (newItem.amount + 1 > product.amount) {
-      return console.log('produto fora de estoque');
+      return toast.error('Quantidade solicitada fora de estoque!');
     }
 
     return setCart(state => {
@@ -115,7 +116,7 @@ const GlobalsProvider= ({ children }) => {
     for (let g = 0; g < items.length+1; g++) {
       cache[g] = [];
       for (let h = 0; h < W+1; h++) {
-        cache[g][h] = {numero:0, itens: []}
+        cache[g][h] = {num:0, itens: []}
       }
    }
    let weights = items.map(item => item.price);
@@ -124,13 +125,13 @@ const GlobalsProvider= ({ children }) => {
     for (let i = 0; i < items.length+1; i++) {
       for (let j = 0; j < W+1; j++) {
         if (i === 0 || j === 0) {
-          cache[i][j].numero = 0;
+          cache[i][j].num = 0;
         }
         else if (weights[i-1] <= j) {
-          let included = values[i-1] + cache[i-1][j-weights[i-1]].numero;
-          let excluded = cache[i-1][j].numero;
-          cache[i][j].numero = Math.max(included, excluded);
-          if (cache[i][j].numero == included) {
+          let included = values[i-1] + cache[i-1][j-weights[i-1]].num;
+          let excluded = cache[i-1][j].num;
+          cache[i][j].num = Math.max(included, excluded);
+          if (cache[i][j].num == included) {
             cache[i][j].itens = [items[i-1],...cache[i-1][j-weights[i-1]].itens];
           } else {
             cache[i][j].itens = [...cache[i-1][j].itens];
@@ -138,7 +139,7 @@ const GlobalsProvider= ({ children }) => {
           }
           else {
             if (cache[i][j]) {
-              cache[i][j].numero = cache[i-1][j].numero;
+              cache[i][j].num = cache[i-1][j].num;
               cache[i][j].itens = cache[i-1][j].itens;
             }
           }
@@ -148,8 +149,8 @@ const GlobalsProvider= ({ children }) => {
 }
 
   const cartOptimize = (wallet) => {
-    if (wallet <= 0) return console.log("Valor na carteira invalido");
-    if (cart.length === 0) return console.log("O carrinho está vazio");
+    if (wallet <= 0) return toast.error("Valor da carteira invalido!");
+    if (cart.length === 0) return toast.error("O carrinho está vazio!");
 
     const cartCopy = [...cart];
 
@@ -165,9 +166,9 @@ const GlobalsProvider= ({ children }) => {
 
     const response = maxKnapsack(ordenedCart, wallet);
 
-    let unique = [...new Set(response.itens)];
+    const unique = [...new Set(response.itens)];
 
-    let newCart = unique.map(value => {
+    const newCart = unique.map(value => {
       return {
         ...value,
         amount: response.itens.filter(item => item.id === value.id).length
@@ -175,6 +176,7 @@ const GlobalsProvider= ({ children }) => {
     });
 
     setCart(newCart);
+    toast.success('Carrinho otimizado com sucesso!')
   }
 
   return (
