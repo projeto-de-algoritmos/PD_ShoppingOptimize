@@ -148,6 +148,9 @@ const GlobalsProvider= ({ children }) => {
 }
 
   const cartOptimize = (wallet) => {
+    if (wallet <= 0) return console.log("Valor na carteira invalido");
+    if (cart.length === 0) return console.log("O carrinho está vazio");
+
     const cartCopy = [...cart];
 
     const ordenedCart = [];
@@ -164,18 +167,12 @@ const GlobalsProvider= ({ children }) => {
 
     let unique = [...new Set(response.itens)];
 
-    let duplicates = unique.map(value => {
+    let newCart = unique.map(value => {
       return {
-        id: value.id,
+        ...value,
         amount: response.itens.filter(item => item.id === value.id).length
       }
     });
-
-    let newCart = unique.map((item, idx) => {
-      if (item.id === duplicates[idx].id) {
-        return {...item, amount: duplicates[idx].amount}
-      }
-    })
 
     setCart(newCart);
   }
