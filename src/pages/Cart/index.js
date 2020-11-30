@@ -21,7 +21,8 @@ const  Cart = () => {
     removeQntFromCart,
     removeItemFromCart,
     incrementPriority,
-    decrementPriority
+    decrementPriority,
+    cartOptimize
   } = useGlobals();
 
   useEffect(() => {
@@ -103,7 +104,7 @@ const  Cart = () => {
             onChange={(e) => setWallet(e.target.value)}
             />
         </div>
-        <button type="button"> Otimizar pedido</button>
+        <button type="button" onClick={() => cartOptimize(wallet)}> Otimizar pedido</button>
         <Total>
           <span> TOTAL</span>
           <strong>{formatPrice(total)}</strong>

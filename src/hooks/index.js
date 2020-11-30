@@ -14,42 +14,42 @@ const GlobalsProvider= ({ children }) => {
       "id": 1,
       "amount": 3,
       "title": "Tênis de Caminhada Leve Confortável",
-      "price": 179.9,
+      "price": 179,
       "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg"
     },
     {
       "id": 2,
       "amount": 5,
       "title": "Tênis VR Caminhada Confortável Detalhes Couro Masculino",
-      "price": 139.9,
+      "price": 139,
       "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg"
     },
     {
       "id": 3,
       "amount": 2,
       "title": "Tênis Adidas Duramo Lite 2.0",
-      "price": 219.9,
+      "price": 219,
       "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis3.jpg"
     },
     {
       "id": 5,
       "amount": 1,
       "title": "Tênis VR Caminhada Confortável Detalhes Couro Masculino",
-      "price": 139.9,
+      "price": 139,
       "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg"
     },
     {
       "id": 6,
       "amount": 5,
       "title": "Tênis Adidas Duramo Lite 2.0",
-      "price": 219.9,
+      "price": 219,
       "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis3.jpg"
     },
     {
       "id": 4,
       "amount": 10,
       "title": "Tênis de Caminhada Leve Confortável",
-      "price": 179.9,
+      "price": 179,
       "image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg"
     }
   ]);
@@ -110,6 +110,53 @@ const GlobalsProvider= ({ children }) => {
     });
   }
 
+  function maxKnapsack(items, W) {     
+    let cache = [];
+   // Cria matriz com zeros
+   for (let g = 0; g < items.length+1; g++){
+        cache[g] = [];
+        for (let h = 0; h < W+1; h++) {
+         cache[g][h] = {numero:0, itens: []}
+        }
+   }
+   let weights = items.map(item => item.price);
+   let values = items.map(item => item.priority);
+
+   for (let i = 0; i < items.length+1; i++) {
+        for (let j = 0; j < W+1; j++) {
+             if (i === 0 || j === 0) {
+                  cache[i][j].numero = 0;
+             }
+             else if (weights[i-1] <= j) {
+                  let included = values[i-1] + cache[i-1][j-weights[i-1]].numero;
+                  let excluded = cache[i-1][j].numero;
+                  cache[i][j].numero = Math.max(included, excluded);
+                  if (cache[i][j].numero == included) {
+                   cache[i][j].itens = [items[i-1],...cache[i-1][j-weights[i-1]].itens]
+                  } else {
+                    cache[i][j].itens = [...cache[i-1][j].itens];
+                  }
+             }
+             else
+              if (cache[i][j]) {
+                cache[i][j].numero = cache[i-1][j].numero
+                cache[i][j].itens = cache[i-1][j].itens
+              } 
+        }
+   }
+   return cache[items.length][W];
+}
+
+  const cartOptimize = (wallet) => {
+    const ordenedCart = [...cart]
+    ordenedCart.sort((a, b) => (a.price > b.price) ? 1 : -1)
+
+    
+    const resposta = maxKnapsack(ordenedCart, wallet)
+
+    setCart(resposta.itens)
+  }
+
   return (
     <GlobalsContext.Provider
       value={{
@@ -119,7 +166,8 @@ const GlobalsProvider= ({ children }) => {
         removeQntFromCart,
         removeItemFromCart,
         incrementPriority,
-        decrementPriority
+        decrementPriority,
+        cartOptimize
       }}
     >
       {children}
@@ -138,3 +186,5 @@ function useGlobals() {
 }
 
 export { GlobalsProvider, useGlobals };
+
+
