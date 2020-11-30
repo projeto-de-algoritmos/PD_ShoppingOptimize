@@ -110,51 +110,74 @@ const GlobalsProvider= ({ children }) => {
     });
   }
 
-  function maxKnapsack(items, W) {     
+  const maxKnapsack = (items, W) => {
     let cache = [];
-   // Cria matriz com zeros
-   for (let g = 0; g < items.length+1; g++){
-        cache[g] = [];
-        for (let h = 0; h < W+1; h++) {
-         cache[g][h] = {numero:0, itens: []}
-        }
+    for (let g = 0; g < items.length+1; g++) {
+      cache[g] = [];
+      for (let h = 0; h < W+1; h++) {
+        cache[g][h] = {numero:0, itens: []}
+      }
    }
    let weights = items.map(item => item.price);
    let values = items.map(item => item.priority);
 
-   for (let i = 0; i < items.length+1; i++) {
-        for (let j = 0; j < W+1; j++) {
-             if (i === 0 || j === 0) {
-                  cache[i][j].numero = 0;
-             }
-             else if (weights[i-1] <= j) {
-                  let included = values[i-1] + cache[i-1][j-weights[i-1]].numero;
-                  let excluded = cache[i-1][j].numero;
-                  cache[i][j].numero = Math.max(included, excluded);
-                  if (cache[i][j].numero == included) {
-                   cache[i][j].itens = [items[i-1],...cache[i-1][j-weights[i-1]].itens]
-                  } else {
-                    cache[i][j].itens = [...cache[i-1][j].itens];
-                  }
-             }
-             else
-              if (cache[i][j]) {
-                cache[i][j].numero = cache[i-1][j].numero
-                cache[i][j].itens = cache[i-1][j].itens
-              } 
+    for (let i = 0; i < items.length+1; i++) {
+      for (let j = 0; j < W+1; j++) {
+        if (i === 0 || j === 0) {
+          cache[i][j].numero = 0;
         }
+        else if (weights[i-1] <= j) {
+          let included = values[i-1] + cache[i-1][j-weights[i-1]].numero;
+          let excluded = cache[i-1][j].numero;
+          cache[i][j].numero = Math.max(included, excluded);
+          if (cache[i][j].numero == included) {
+            cache[i][j].itens = [items[i-1],...cache[i-1][j-weights[i-1]].itens];
+          } else {
+            cache[i][j].itens = [...cache[i-1][j].itens];
+            }
+          }
+          else {
+            if (cache[i][j]) {
+              cache[i][j].numero = cache[i-1][j].numero;
+              cache[i][j].itens = cache[i-1][j].itens;
+            }
+          }
+      }
    }
    return cache[items.length][W];
 }
 
   const cartOptimize = (wallet) => {
-    const ordenedCart = [...cart]
-    ordenedCart.sort((a, b) => (a.price > b.price) ? 1 : -1)
+    const cartCopy = [...cart];
 
-    
-    const resposta = maxKnapsack(ordenedCart, wallet)
+    const ordenedCart = [];
 
-    setCart(resposta.itens)
+    cartCopy.forEach((item) => {
+      for (let i = 0; i < item.amount; i++) {
+        ordenedCart.push(item);
+      }
+    })
+
+    ordenedCart.sort((a, b) => (a.price > b.price) ? 1 : -1);
+
+    const response = maxKnapsack(ordenedCart, wallet);
+
+    let unique = [...new Set(response.itens)];
+
+    let duplicates = unique.map(value => {
+      return {
+        id: value.id,
+        amount: response.itens.filter(item => item.id === value.id).length
+      }
+    });
+
+    let newCart = unique.map((item, idx) => {
+      if (item.id === duplicates[idx].id) {
+        return {...item, amount: duplicates[idx].amount}
+      }
+    })
+
+    setCart(newCart);
   }
 
   return (
