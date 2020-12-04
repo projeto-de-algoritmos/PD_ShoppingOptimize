@@ -48,7 +48,7 @@ Criamos uma ferramenta responsável pela otimização do carrinho de compras de 
 - [Styled-components](https://styled-components.com/)
 - [React-icons](https://react-icons.github.io/react-icons/)
 - [Polished](https://polished.js.org/)
-- [react-toastify](https://fkhadra.github.io/react-toastify/introduction/)
+- [React-toastify](https://fkhadra.github.io/react-toastify/introduction/)
 
 O deploy da aplicação foi feito pelo netlify na url: https://shopping-optimize.netlify.app/
 
@@ -56,10 +56,10 @@ O deploy da aplicação foi feito pelo netlify na url: https://shopping-optimize
 Caso queira executar o projeto em sua maquina, é necessário ter o node instalado, recomendamos a utilização do yarn como gerenciador de pacotes, porém também pode ser utilizado com o npm, e siga os seguintes passos:
 
 Clone o repositório
-> git clone https://github.com/projeto-de-algoritmos/PD_Dupla13.git
+> git clone https://github.com/projeto-de-algoritmos/PD_ShoppingOptimize.git
 
 Acesse a pasta
-> cd PD_Dupla13
+> cd PD_ShoppingOptimize
 
 Instale as dependências
 > yarn
@@ -72,7 +72,7 @@ A aplicação possui duas páginas, a interação se da por meio dos botões e i
 
 
 ## Apresentação
-A apresentação em video está disponível no link: https://github.com/projeto-de-algoritmos/PD_Dupla13/blob/master/Apresentacao.mp4
+A apresentação em video está disponível no link: https://github.com/projeto-de-algoritmos/PD_ShoppingOptimize/blob/master/Apresentacao.mp4
 
 ## Referências
 - Vídeoaula do professor
