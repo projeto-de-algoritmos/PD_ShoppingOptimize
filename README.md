@@ -72,7 +72,7 @@ A aplicação possui duas páginas, a interação se da por meio dos botões e i
 
 
 ## Apresentação
-A apresentação em video está disponível no link: https://github.com/projeto-de-algoritmos/PD_ShoppingOptimize/blob/master/Apresentacao.mp4
+A apresentação em video está disponível no link: https://github.com/projeto-de-algoritmos/PD_ShoppingOptimize/blob/master/video.mp4
 
 ## Referências
 - Vídeoaula do professor
